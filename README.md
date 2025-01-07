@@ -15,7 +15,7 @@
 ### Experiences
   - 🧥 I have experience with web development and applications back-and. I also have knowledge of reverse engineering and for a long time I worked in this sector manipulating application and game memory.
 
-<h2 align="left">Hi 👋! My name is ... and I'm a ..., from ....</h2>
+<h2 .</h2>
 
 ###
 
