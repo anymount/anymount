@@ -1,0 +1,65 @@
+if _G.MeuFlyScript then return end
+_G.MeuFlyScript = true
+
+-- Créditos ou nome do sistema
+print("Fly Script by SeuNome")
+
+-- Proteção básica
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+-- Executa o script principal (você pode colocar aqui diretamente ou separar em outro link)
+local success, err = pcall(function()
+    -- Coloque aqui o código do sistema de fly (como o que montamos antes)
+    -- Por exemplo:
+    local UserInputService = game:GetService("UserInputService")
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+
+    local player = Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+    local flying = false
+    local flySpeed = 50
+    local flyBind = Enum.KeyCode.F
+
+    local function fly()
+        local bodyGyro = Instance.new("BodyGyro")
+        bodyGyro.P = 9e4
+        bodyGyro.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+        bodyGyro.cframe = humanoidRootPart.CFrame
+        bodyGyro.Parent = humanoidRootPart
+
+        local bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.velocity = Vector3.new(0, 0, 0)
+        bodyVelocity.maxForce = Vector3.new(9e9, 9e9, 9e9)
+        bodyVelocity.Parent = humanoidRootPart
+
+        RunService.RenderStepped:Connect(function()
+            if flying then
+                bodyGyro.CFrame = workspace.CurrentCamera.CFrame
+                bodyVelocity.Velocity = workspace.CurrentCamera.CFrame.LookVector * flySpeed
+            else
+                bodyGyro:Destroy()
+                bodyVelocity:Destroy()
+            end
+        end)
+    end
+
+    local function toggleFly()
+        flying = not flying
+        if flying then fly() end
+    end
+
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if not gameProcessed and input.KeyCode == flyBind then
+            toggleFly()
+        end
+    end)
+end)
+
+if not success then
+    warn("Erro ao carregar o script:", err)
+end
